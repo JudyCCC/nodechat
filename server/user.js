@@ -1,14 +1,34 @@
-cconst express = require('express')
+const express = require('express')
 const utils = require('utility')
 const Router = express.Router()
 const model = require('./model')
 const User = model.getModel('user')
 const _filter = {'pwd':0, '__v':0}
 
+// get 用req.query获取
+// post 用req.body获取
+
 // 查看数据库数据接口 
 Router.get('/list', function(req, res){
-  User.find({}, function(err, doc){
-    return res.json(doc)
+  const { type } = req.query
+  User.find({type}, function(err, doc){
+    return res.json({code: 0,data: doc})
+  })
+})
+
+// 完善个人信息接口
+Router.post('/update', function(req, res){
+  const userid = req.cookies.userid
+  if(!userid){
+    return res.json.dumps({code: 1})
+  }
+  const body = req.body
+  User.findByIdAndUpdate(userid, body, function(err, doc){
+    const data = Object.assign({},{
+      user: doc.user,
+      type: doc.type
+    }, body)
+    return res.json({code:0, data})
   })
 })
 
@@ -57,7 +77,6 @@ Router.get('/info', function(req, res){
   if(!userid){
     return res.json({code: 1})
   }
-  console.log(111)
   User.findOne({_id: userid}, _filter, function(err, doc){
     if(err){
       return res.json({code: 1, msg: '后端出错了'})

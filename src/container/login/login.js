@@ -36,15 +36,15 @@ class Login extends React.Component{
   }
 
   render(){
-    const { redirectTo } = this.props;
+    const { redirectTo, msg } = this.props;
 
     return (
       <div>
         { redirectTo ? <Redirect to={redirectTo} /> : null }
         <Logo />
-        <h2>我是登录页面</h2>
         <WingBlank>
           <List>
+            {msg ? <p className='error-msg'>{msg}</p> : null}
             <InputItem onChange={(v) => this.handleChange('user', v)}>用户名</InputItem>
             <WhiteSpace />
             <InputItem type="password" onChange={(v) => this.handleChange('pwd', v)}>密码</InputItem>
