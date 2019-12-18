@@ -19,6 +19,7 @@ class AvatarSelector extends React.Component{
       icon: require(`../img/${v}.png`),
       text: v
     })) 
+    console.log(icon)
     const gridHeader = icon 
                         ? (
                           <div>

@@ -1,8 +1,10 @@
 import axios from "axios"
 import { getRedirectPath } from '../util'
+
 const ERROR_MSG = 'ERROR_MSG'
 const LOAD_DATA = 'LOAD_DATA'
 const AUTH_SUCCESS = 'AUTH_SUCCESS'
+const LOGOUT = 'LOGOUT'
 
 const initState = {
   redirectTo: '',   // 跳转到
@@ -21,6 +23,8 @@ export function user(state=initState, {type, payload, msg}){
       return {...state, ...payload}
     case ERROR_MSG:
       return {...state, isAuth: false, msg: msg} 
+    case LOGOUT:
+      return {...initState, redirectTo: 'login'}
     default: 
       return state
   }
@@ -33,6 +37,10 @@ function authSuccess(obj){
 
 function errorMsg(msg){
   return {msg, type: ERROR_MSG}
+}
+
+export function logoutSubmit(){
+  return {type: LOGOUT}
 }
 
 export function update(data){
