@@ -6,6 +6,9 @@ const User = model.getModel('user')
 const Chat = model.getModel('chat')
 const _filter = {'pwd':0, '__v':0}
 
+// 清空聊天
+// Chat.remove({}, function(e,d){})
+
 // get 用req.query获取
 // post 用req.body获取
 
@@ -19,11 +22,18 @@ Router.get('/list', function(req, res){
 
 // 获取消息列表
 Router.get('/getmsglist', function(req, res){
-  const user = req.cookies.user
-  Chat.find({}, function(err, doc){
-    if(!err){
-      return res.json({code:0, msgs:doc})
-    }
+  const user = req.cookies.userid
+  User.find({}, function(e, userdoc){
+    let users = {}
+    userdoc.forEach(v => {
+      users[v._id] = { name: v.user, avatar: v.avatar }
+    })
+    // $or 查询多个条件
+    Chat.find({'$or': [{from: user}, {to: user}]}, function(err, doc){
+      if(!err){
+        return res.json({code:0, msgs:doc, users: users})
+      }
+    })
   })
 })
 

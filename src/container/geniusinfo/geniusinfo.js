@@ -37,7 +37,7 @@ class GeniusInfo extends React.Component{
     const path = location.pathname
 
     return (
-      <div className="gi-content">
+      <div className="page-content">
         {redirectTo && redirectTo !== path ? <Redirect to={redirectTo}></Redirect> : null}
         <NavBar mode="dark">牛人完善信息页</NavBar>
         <AvatarSelector selectAvatar={this.selectAvatar}></AvatarSelector>
