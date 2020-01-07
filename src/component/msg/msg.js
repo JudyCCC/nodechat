@@ -13,7 +13,7 @@ class Msg extends React.Component{
   }
 
   render() {
-    const { chat, user } = this.props
+    const { chat, user, history } = this.props
     const { chatmsg } = chat
     const userid = user._id
     const userinfo = chat.users
@@ -24,9 +24,17 @@ class Msg extends React.Component{
       msgGroup[v.chatid].push(v)
     })
 
-    const chatList = Object.values(msgGroup)
+    const chatList = Object.values(msgGroup).sort((a, b) => {
+      const a_last = this.getLast(a).create_time
+      const b_last = this.getLast(b).create_time
+      return b_last - a_last
+    })
 
     // 按照聊天用户分组，根据chatid
+
+    // 1.eslint代码校验工具
+    // 2.react16特有的错误处理机制
+    // 3.react性能优化
     return (
       <div>
         {
@@ -42,6 +50,10 @@ class Msg extends React.Component{
                 <Item 
                   extra={<Badge text={unreadNum}></Badge>}
                   thumb={require(`../img/${userinfo[targetId].avatar}.png`)}
+                  arrow="horizontal"
+                  onClick={() => {
+                    history.push(`chat/${targetId}`)
+                  }}
                 >
                   {lastItem.content}
                   <Brief>{ userinfo[targetId].name }</Brief>

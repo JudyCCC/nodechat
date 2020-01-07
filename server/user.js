@@ -108,6 +108,25 @@ Router.get('/info', function(req, res){
   })
 })
 
+// 将消息置为已读
+Router.post('/readmsg', function(req, res){
+  const userid = req.cookies.userid
+  const { from } = req.body
+  Chat.update(
+    { from, to: userid }, 
+    {'$set': {read: true}},
+    {'multi': true},
+    function(err, doc) {
+      // console.log(doc) => {n: 0, nModified: 1, ok: 1}
+      // n: 找到几条数据, nModified: 影响了几条, ok: 修改成功没有
+      if(!err){
+        return res.json({code: 0, num: doc.nModified})
+      }
+      return res.json({code: 1, msg: '修改失败'})
+    }
+  )
+})
+
 // 密码加密
 function md5Pwd(pwd){
   const salt = 'JudyC_fighting!!!!!!!!'
